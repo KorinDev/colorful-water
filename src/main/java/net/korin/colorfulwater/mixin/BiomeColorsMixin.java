@@ -1,6 +1,7 @@
 package net.korin.colorfulwater.mixin;
 
 
+import net.korin.colorfulwater.WaterColorLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.BiomeColors;
@@ -26,9 +27,13 @@ public class BiomeColorsMixin {
                     .getKey(biomeHolder.value())
                     .getPath();
 
+        var biomeKey = biomeHolder.unwrapKey().orElse(null);
 
-        if (biomeName.equals("mushroom_fields")) {
-            cir.setReturnValue(ARGB.color(255, 255, 0, 255));
+        if (biomeKey != null) {
+            int[] rgba = WaterColorLoader.OVERRIDES.get(biomeKey);
+            if (rgba != null) {
+                cir.setReturnValue(ARGB.color(rgba[3], rgba[0], rgba[1], rgba[2]));
+            }
         }
     }
 }

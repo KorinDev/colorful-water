@@ -2,23 +2,24 @@ package net.korin.colorfulwater;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.fabricmc.fabric.impl.resource.loader.ResourceManagerHelperImpl;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.PackType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ColorfulWater implements ModInitializer {
 	public static final String MOD_ID = "colorful-water";
 
-	// This logger is used to write text to the console and the log file.
-	// It is considered best practice to use your mod id as the logger's name.
-	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	@Override
 	public void onInitialize() {
-		// This code runs as soon as Minecraft is in a mod-load-ready state.
-		// However, some things (like resources) may still be uninitialized.
-		// Proceed with mild caution.
+        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(
+                Identifier.fromNamespaceAndPath("colorfulwater", "water_color_loader"),
+                new WaterColorLoader());
 
-		LOGGER.info("Hello Fabric world!");
+		LOGGER.info("Loaded.");
 	}
 }
