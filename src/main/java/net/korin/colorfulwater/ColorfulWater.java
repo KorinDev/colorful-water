@@ -3,7 +3,6 @@ package net.korin.colorfulwater;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
-import net.fabricmc.fabric.impl.resource.loader.ResourceManagerHelperImpl;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import org.slf4j.Logger;
@@ -16,6 +15,8 @@ public class ColorfulWater implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+
+
         ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(
                 Identifier.fromNamespaceAndPath("colorfulwater", "water_color_loader"),
                 new WaterColorLoader());

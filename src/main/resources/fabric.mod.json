@@ -3,12 +3,12 @@
 	"id": "colorful-water",
 	"version": "${version}",
 	"name": "Colorful Water",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Custom water colors per biome!",
 	"authors": [
-		"Me!"
+		"Korin"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
+		"homepage": "",
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
 	"license": "CC0-1.0",

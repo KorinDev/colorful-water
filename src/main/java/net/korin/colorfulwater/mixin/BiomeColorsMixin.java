@@ -2,12 +2,10 @@ package net.korin.colorfulwater.mixin;
 
 import net.korin.colorfulwater.WaterColorLoader;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.level.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,11 +18,27 @@ public class BiomeColorsMixin {
 
     @Inject(method = "getAverageWaterColor", at = @At("HEAD"), cancellable = true)
     private static void onGetWaterColor(BlockAndTintGetter level, BlockPos pos, CallbackInfoReturnable<Integer> cir) {
+
+        Minecraft client = Minecraft.getInstance();
+        int blendRadius = client.options.biomeBlendRadius().get();
+
+        if (blendRadius == 0) {
+            Holder<Biome> biomeHolder = level.getBiomeFabric(pos);
+            var biomeKey = biomeHolder.unwrapKey().orElse(null);
+            if (biomeKey != null) {
+                int[] rgba = WaterColorLoader.OVERRIDES.get(biomeKey);
+                if (rgba != null) {
+                    cir.setReturnValue(ARGB.color(rgba[3], rgba[0], rgba[1], rgba[2]));
+                }
+            }
+            return;
+        }
+
         int r = 0, g = 0, b = 0;
         int samples = 0;
 
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dz = -1; dz <= 1; dz++) {
+        for (int dx = -blendRadius; dx <= blendRadius; dx++) {
+            for (int dz = -blendRadius; dz <= blendRadius; dz++) {
                 BlockPos samplePos = pos.offset(dx, 0, dz);
                 Holder<Biome> biomeHolder = level.getBiomeFabric(samplePos);
                 var biomeKey = biomeHolder.unwrapKey().orElse(null);
