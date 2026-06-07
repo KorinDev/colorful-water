@@ -1,6 +1,5 @@
 package net.korin.colorfulwater.mixin;
 
-
 import net.korin.colorfulwater.WaterColorLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -21,19 +20,34 @@ public class BiomeColorsMixin {
 
     @Inject(method = "getAverageWaterColor", at = @At("HEAD"), cancellable = true)
     private static void onGetWaterColor(BlockAndTintGetter level, BlockPos pos, CallbackInfoReturnable<Integer> cir) {
-        Holder<Biome> biomeHolder = level.getBiomeFabric(pos);
-        String biomeName = Minecraft.getInstance().player.registryAccess()
-                    .lookupOrThrow(Registries.BIOME)
-                    .getKey(biomeHolder.value())
-                    .getPath();
+        int r = 0, g = 0, b = 0;
+        int samples = 0;
 
-        var biomeKey = biomeHolder.unwrapKey().orElse(null);
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                BlockPos samplePos = pos.offset(dx, 0, dz);
+                Holder<Biome> biomeHolder = level.getBiomeFabric(samplePos);
+                var biomeKey = biomeHolder.unwrapKey().orElse(null);
 
-        if (biomeKey != null) {
-            int[] rgba = WaterColorLoader.OVERRIDES.get(biomeKey);
-            if (rgba != null) {
-                cir.setReturnValue(ARGB.color(rgba[3], rgba[0], rgba[1], rgba[2]));
+                if (biomeKey != null) {
+                    int[] rgba = WaterColorLoader.OVERRIDES.get(biomeKey);
+                    if (rgba != null) {
+                        r += rgba[0];
+                        g += rgba[1];
+                        b += rgba[2];
+                    } else {
+                        int vanilla = biomeHolder.value().getWaterColor();
+                        r += ((vanilla >> 16) & 0xFF);
+                        g += ((vanilla >> 8) & 0xFF);
+                        b += (vanilla & 0xFF);
+                    }
+                    samples++;
+                }
             }
+        }
+
+        if (samples > 0) {
+            cir.setReturnValue(ARGB.color(255, r / samples, g / samples, b / samples));
         }
     }
 }
