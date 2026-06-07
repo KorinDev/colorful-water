@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "colorful-water",
+	"version": "${version}",
+	"name": "Colorful Water",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/colorful-water/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.korin.colorfulwater.ColorfulWater"
+		]
+	},
+	"mixins": [
+		"colorful-water.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.1.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
