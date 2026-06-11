@@ -78,7 +78,11 @@ public class WaterColorLoader extends SimplePreparableReloadListener<Void> {
                         }
                     }
 
-                    ResourceKey<Biome> biomeKey = ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath("minecraft", biomeName));
+                    String[] parts = biomeName.split(":", 2);
+                    String namespace = parts.length > 1 ? parts[0] : "minecraft";
+                    String path = parts.length > 1 ? parts[1] : parts[0];
+                    ResourceKey<Biome> biomeKey = ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath(namespace, path));
+                    //ResourceKey<Biome> biomeKey = ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath("minecraft", biomeName));
                     OVERRIDES.put(biomeKey, data);
                 }
             } catch (Exception e) {

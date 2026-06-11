@@ -2,6 +2,6 @@
     "pack": {
         "min_format": [80, 0],
         "max_format": [999, 0],
-        "description": "v1.1"
+        "description": "v1.2"
     }
 }
